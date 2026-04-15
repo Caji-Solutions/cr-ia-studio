@@ -1,0 +1,49 @@
+name: contentai-dev-squad
+version: 1.0.0
+description: Squad de desenvolvimento especializado para o ContentAI Studio — geração de conteúdo com IA, frontend Next.js e renderização de vídeo com Remotion
+author: ContentAI Studio
+license: UNLICENSED
+slashPrefix: contentai
+
+aiox:
+  minVersion: "2.1.0"
+  type: squad
+
+components:
+  agents:
+    - content-dev.md
+    - frontend-dev.md
+    - video-dev.md
+  tasks:
+    - add-content-format.md
+    - update-ai-prompt.md
+    - build-ui-component.md
+    - create-video-scene.md
+  workflows: []
+  checklists: []
+  templates: []
+  tools: []
+  scripts: []
+
+config:
+  extends: extend
+  tech-stack: config/tech-stack.md
+  coding-standards: config/coding-standards.md
+
+dependencies:
+  node:
+    - next
+    - "@google/generative-ai"
+    - better-sqlite3
+    - "@remotion/renderer"
+    - tailwindcss
+  python: []
+  squads: []
+
+tags:
+  - nextjs
+  - gemini
+  - remotion
+  - sqlite
+  - content-generation
+  - pt-BR

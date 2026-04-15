@@ -1,0 +1,15 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="7" fill="url(#g)"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+  </defs>
+  <!-- Large star -->
+  <path d="M15.5 4 L17.3 10.2 L23.5 12 L17.3 13.8 L15.5 20 L13.7 13.8 L7.5 12 L13.7 10.2 Z" fill="white"/>
+  <!-- Small star top-right -->
+  <path d="M23.5 4 L24.4 6.6 L27 7.5 L24.4 8.4 L23.5 11 L22.6 8.4 L20 7.5 L22.6 6.6 Z" fill="white" opacity="0.8"/>
+  <!-- Small star bottom-left -->
+  <path d="M9 20 L9.7 22.3 L12 23 L9.7 23.7 L9 26 L8.3 23.7 L6 23 L8.3 22.3 Z" fill="white" opacity="0.6"/>
+</svg>
