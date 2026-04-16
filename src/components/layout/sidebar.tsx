@@ -21,7 +21,7 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 
 const navItems = [
-  { name: 'Dashboard',    href: '/',          icon: Home     },
+  { name: 'Dashboard',    href: '/dashboard', icon: Home     },
   { name: 'Criar',        href: '/create',    icon: CopyPlus },
   { name: 'Projetos',     href: '/projects',  icon: Folder   },
   { name: 'Brand Kit',    href: '/brand-kit', icon: Palette  },
@@ -43,8 +43,11 @@ export function Sidebar() {
         'group',
       )}
     >
-      {/* Logo */}
-      <div className="flex h-16 items-center px-[18px] w-[228px] shrink-0 border-b border-border">
+      {/* Logo — clicável, redireciona para a home */}
+      <Link
+        href="/"
+        className="flex h-16 items-center px-[18px] w-[228px] shrink-0 border-b border-border hover:bg-muted/40 transition-colors"
+      >
         <div className="flex items-center gap-3">
           <div
             className="h-8 w-8 rounded-xl shrink-0 flex items-center justify-center"
@@ -60,7 +63,7 @@ export function Sidebar() {
             <p className="text-[11px] text-muted-foreground mt-0.5 leading-none">Studio</p>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* Nav */}
       <nav className="flex-1 py-4 w-[228px]">

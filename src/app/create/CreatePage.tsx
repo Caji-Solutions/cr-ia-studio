@@ -5,11 +5,10 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import {
   LayoutGrid, ImageIcon, Smartphone, Monitor,
-  Type, Loader2, ChevronDown, Music, Film, RefreshCw,
+  Type, Loader2, ChevronDown, Music, Film, RefreshCw, Sparkles, Wand2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import {
@@ -48,17 +47,19 @@ interface CreatePageProps {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const FORMAT_OPTIONS: {
-  value:   ProjectFormat
-  label:   string
-  icon:    React.ElementType
-  isVideo: boolean
+  value:    ProjectFormat
+  label:    string
+  icon:     React.ElementType
+  isVideo:  boolean
+  gradient: string
+  shadow:   string
 }[] = [
-  { value: 'carousel',   label: 'Carrossel',  icon: LayoutGrid, isVideo: false },
-  { value: 'post',       label: 'Post',        icon: ImageIcon,  isVideo: false },
-  { value: 'story',      label: 'Story',       icon: Film,       isVideo: false },
-  { value: 'video_16_9', label: 'Vídeo 16:9', icon: Monitor,    isVideo: true  },
-  { value: 'video_9_16', label: 'Vídeo 9:16', icon: Smartphone, isVideo: true  },
-  { value: 'caption',    label: 'Legenda',     icon: Type,       isVideo: false },
+  { value: 'carousel',   label: 'Carrossel',  icon: LayoutGrid, isVideo: false, gradient: 'linear-gradient(135deg,#8b5cf6,#7c3aed)', shadow: '0 4px 14px #8b5cf644' },
+  { value: 'post',       label: 'Post',        icon: ImageIcon,  isVideo: false, gradient: 'linear-gradient(135deg,#6366f1,#4f46e5)', shadow: '0 4px 14px #6366f144' },
+  { value: 'story',      label: 'Story',       icon: Film,       isVideo: false, gradient: 'linear-gradient(135deg,#ec4899,#db2777)', shadow: '0 4px 14px #ec489944' },
+  { value: 'video_16_9', label: 'Vídeo 16:9', icon: Monitor,    isVideo: true,  gradient: 'linear-gradient(135deg,#3b82f6,#2563eb)', shadow: '0 4px 14px #3b82f644' },
+  { value: 'video_9_16', label: 'Vídeo 9:16', icon: Smartphone, isVideo: true,  gradient: 'linear-gradient(135deg,#14b8a6,#0d9488)', shadow: '0 4px 14px #14b8a644' },
+  { value: 'caption',    label: 'Legenda',     icon: Type,       isVideo: false, gradient: 'linear-gradient(135deg,#f59e0b,#d97706)', shadow: '0 4px 14px #f59e0b44' },
 ]
 
 const PLACEHOLDERS: Record<ProjectFormat, string> = {
@@ -334,7 +335,7 @@ export function CreatePage({ initialFormat, initialCommand }: CreatePageProps) {
     <div className="flex flex-col lg:flex-row h-full min-h-screen">
 
       {/* ══════════════ LEFT COLUMN — Briefing / Refinamento ══════════════ */}
-      <aside className="lg:w-[380px] lg:min-h-screen border-r shrink-0 overflow-y-auto">
+      <aside className="lg:w-[390px] lg:min-h-screen border-r border-border/60 shrink-0 overflow-y-auto bg-card/40 backdrop-blur-sm">
 
         {/* Refinement panel — aparece quando usuário clica em Refinar */}
         {isRefining && result && (
@@ -350,247 +351,278 @@ export function CreatePage({ initialFormat, initialCommand }: CreatePageProps) {
 
         {/* Briefing form — oculto durante refinamento */}
         <div className={isRefining && result ? 'hidden' : undefined}>
-        <div className="p-5">
-          <Card className="gap-0">
 
-            <CardHeader className="pb-3 border-b">
-              <CardTitle className="text-base font-semibold text-foreground">
-                Novo conteúdo
-              </CardTitle>
-            </CardHeader>
-
-            <CardContent className="pt-4 flex flex-col gap-4">
-
-              {/* Textarea */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-muted-foreground">
-                  O que você quer criar?
-                </label>
-                <Textarea
-                  rows={4}
-                  placeholder={PLACEHOLDERS[format]}
-                  value={command}
-                  onChange={(e) => setCommand(e.target.value)}
-                  className="resize-none text-sm leading-relaxed"
-                  disabled={isGenerating}
-                />
+          {/* ── Cabeçalho gradiente ────────────────────────────────────────────── */}
+          <div
+            className="relative px-5 pt-6 pb-5 border-b border-border/60 overflow-hidden"
+          >
+            {/* Glow decorativo */}
+            <div
+              className="absolute -top-6 -right-6 size-32 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #8b5cf633 0%, transparent 70%)' }}
+            />
+            <div
+              className="absolute -bottom-4 -left-4 size-24 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #ec489922 0%, transparent 70%)' }}
+            />
+            <div className="relative flex items-center gap-2 mb-0.5">
+              <div
+                className="size-7 rounded-lg flex items-center justify-center shrink-0"
+                style={{ background: 'linear-gradient(135deg, #8b5cf6, #ec4899)' }}
+              >
+                <Wand2 className="size-3.5 text-white" />
               </div>
-
-              {/* Format grid 3×2 */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Formato</label>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {FORMAT_OPTIONS.map(({ value: val, label, icon: Icon }) => (
-                    <button
-                      key={val}
-                      type="button"
-                      onClick={() => setFormat(val)}
-                      disabled={isGenerating}
-                      className={cn(
-                        'flex flex-col items-center gap-1 rounded-lg border py-2.5 px-1 text-xs font-medium transition-colors',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                        'disabled:pointer-events-none disabled:opacity-50',
-                        format === val
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground',
-                      )}
-                    >
-                      <Icon className="size-4" />
-                      {label}
-                    </button>
-                  ))}
-                </div>
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="size-3 text-primary/60" />
+                <span className="text-[10px] font-semibold text-primary/60 uppercase tracking-widest">IA Generativa</span>
               </div>
+            </div>
+            <h2 className="text-lg font-bold tracking-tight text-foreground mt-2 font-display">Novo conteúdo</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Descreva o que deseja criar</p>
+          </div>
 
-              {/* Brand Kit */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Brand Kit</label>
-                <Select
-                  value={brandKitId ?? 'none'}
-                  onValueChange={(v) => setBrandKitId(!v || v === 'none' ? null : v)}
-                >
-                  <SelectTrigger className="w-full h-9">
-                    <SelectValue placeholder="Sem Brand Kit">
-                      {selectedKit ? (
-                        <span className="flex items-center gap-2">
-                          <span
-                            className="size-3 rounded-full shrink-0"
-                            style={{ background: selectedKit.primary_color ?? '#6366f1' }}
-                          />
-                          <span className="truncate">{selectedKit.name}</span>
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground">Sem Brand Kit</span>
-                      )}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">
-                      <span className="size-3 rounded-full bg-muted-foreground/30 shrink-0" />
-                      Sem Brand Kit
-                    </SelectItem>
-                    {brandKits.map((bk) => (
-                      <SelectItem key={bk.id} value={bk.id}>
+          <div className="p-5 flex flex-col gap-4">
+
+            {/* Textarea — animate-section-1 */}
+            <div className="flex flex-col gap-1.5 animate-section animate-section-1">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                O que você quer criar?
+              </label>
+              <Textarea
+                rows={4}
+                placeholder={PLACEHOLDERS[format]}
+                value={command}
+                onChange={(e) => setCommand(e.target.value)}
+                className="resize-none text-sm leading-relaxed border-border/70 focus:border-primary/50 focus:ring-primary/20 bg-background/60"
+                disabled={isGenerating}
+              />
+            </div>
+
+            {/* Format grid 3×2 — animate-section-2 */}
+            <div className="flex flex-col gap-1.5 animate-section animate-section-2">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Formato</label>
+              <div className="grid grid-cols-3 gap-1.5">
+                {FORMAT_OPTIONS.map(({ value: val, label, icon: Icon, gradient, shadow }) => (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => setFormat(val)}
+                    disabled={isGenerating}
+                    className={cn(
+                      'flex flex-col items-center gap-1.5 rounded-xl border py-3 px-1 text-xs font-semibold transition-all duration-200',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                      'disabled:pointer-events-none disabled:opacity-50',
+                      format === val
+                        ? 'border-transparent text-white scale-[1.03]'
+                        : 'border-border/60 bg-background/50 text-muted-foreground hover:bg-muted hover:text-foreground hover:border-border',
+                    )}
+                    style={format === val ? { background: gradient, boxShadow: shadow } : {}}
+                  >
+                    <Icon className="size-4" />
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Brand Kit — animate-section-3 */}
+            <div className="flex flex-col gap-1.5 animate-section animate-section-3">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Brand Kit</label>
+              <Select
+                value={brandKitId ?? 'none'}
+                onValueChange={(v) => setBrandKitId(!v || v === 'none' ? null : v)}
+              >
+                <SelectTrigger className="w-full h-9 border-border/70 bg-background/60">
+                  <SelectValue placeholder="Sem Brand Kit">
+                    {selectedKit ? (
+                      <span className="flex items-center gap-2">
                         <span
                           className="size-3 rounded-full shrink-0"
-                          style={{ background: bk.primary_color ?? '#6366f1' }}
+                          style={{ background: selectedKit.primary_color ?? '#6366f1' }}
                         />
-                        {bk.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                        <span className="truncate">{selectedKit.name}</span>
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">Sem Brand Kit</span>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">
+                    <span className="size-3 rounded-full bg-muted-foreground/30 shrink-0" />
+                    Sem Brand Kit
+                  </SelectItem>
+                  {brandKits.map((bk) => (
+                    <SelectItem key={bk.id} value={bk.id}>
+                      <span
+                        className="size-3 rounded-full shrink-0"
+                        style={{ background: bk.primary_color ?? '#6366f1' }}
+                      />
+                      {bk.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-              {/* Gerar imagens IA */}
-              <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/30 px-3 py-2.5">
+            {/* Gerar imagens IA — animate-section-4 */}
+            <div className="animate-section animate-section-4 flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-gradient-to-r from-violet-500/5 to-blue-500/5 px-3.5 py-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="size-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg,#8b5cf620,#3b82f620)' }}>
+                  <ImageIcon className="size-3.5 text-violet-500" />
+                </div>
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm font-medium">Gerar imagens IA</span>
                   <span className="text-xs text-muted-foreground">Via Imagen 3 (Google)</span>
                 </div>
-                <Switch
-                  checked={generateImages}
-                  onCheckedChange={setGenerateImages}
-                  disabled={isGenerating}
-                />
               </div>
+              <Switch
+                checked={generateImages}
+                onCheckedChange={setGenerateImages}
+                disabled={isGenerating}
+              />
+            </div>
 
-              {/* Trilha sonora — só para vídeo */}
-              {isVideo && (
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/30 px-3 py-2.5">
-                    <div className="flex items-center gap-2">
-                      <Music className="size-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">Trilha sonora</span>
+            {/* Trilha sonora — só para vídeo */}
+            {isVideo && (
+              <div className="flex flex-col gap-2 animate-section animate-section-5">
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-border/60 bg-gradient-to-r from-amber-500/5 to-orange-500/5 px-3.5 py-2.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="size-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg,#f59e0b20,#f9731620)' }}>
+                      <Music className="size-3.5 text-amber-500" />
                     </div>
-                    <Switch
-                      checked={musicEnabled}
-                      onCheckedChange={setMusicEnabled}
+                    <span className="text-sm font-medium">Trilha sonora</span>
+                  </div>
+                  <Switch
+                    checked={musicEnabled}
+                    onCheckedChange={setMusicEnabled}
+                    disabled={isGenerating}
+                  />
+                </div>
+
+                {musicEnabled && (
+                  <Select
+                    value={musicMood}
+                    onValueChange={(v) => v && setMusicMood(v as MusicMood)}
+                  >
+                    <SelectTrigger className="w-full h-9 border-border/70 bg-background/60">
+                      <SelectValue placeholder="Mood da trilha" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MUSIC_OPTIONS.map((m) => (
+                        <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+            )}
+
+            {/* Opções avançadas */}
+            <div className="rounded-xl border border-border/60 overflow-hidden bg-background/40">
+              <button
+                type="button"
+                onClick={() => setAdvancedOpen((o) => !o)}
+                className="flex w-full items-center justify-between px-3.5 py-2.5 text-sm font-medium hover:bg-muted/40 transition-colors"
+              >
+                <span className="text-muted-foreground">Opções avançadas</span>
+                <ChevronDown className={cn('size-4 text-muted-foreground transition-transform duration-200', advancedOpen && 'rotate-180')} />
+              </button>
+
+              {advancedOpen && (
+                <div className="border-t border-border/60 px-3.5 pb-3.5 pt-3 flex flex-col gap-3">
+                  {(format === 'carousel' || format === 'story') && (
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">
+                      {format === 'story' ? 'Número de frames' : 'Número de slides'}
+                      <span className="ml-1 font-normal">{format === 'story' ? '(1–5)' : '(3–10)'}</span>
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="range"
+                        min={format === 'story' ? 1 : 3}
+                        max={format === 'story' ? 5 : 10}
+                        step={1}
+                        value={options.count}
+                        onChange={(e) => setOptions((o) => ({ ...o, count: Number(e.target.value) }))}
+                        className="flex-1 h-1.5 accent-primary cursor-pointer"
+                        disabled={isGenerating}
+                      />
+                      <span className="w-5 text-center text-sm font-semibold tabular-nums">{options.count}</span>
+                    </div>
+                  </div>
+                  )}
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Público-alvo</label>
+                    <Input
+                      placeholder="Ex: Empreendedores 25-40 anos"
+                      value={options.audience}
+                      onChange={(e) => setOptions((o) => ({ ...o, audience: e.target.value }))}
                       disabled={isGenerating}
+                      className="h-9 text-sm border-border/70 bg-background/60"
                     />
                   </div>
 
-                  {musicEnabled && (
-                    <Select
-                      value={musicMood}
-                      onValueChange={(v) => v && setMusicMood(v as MusicMood)}
-                    >
-                      <SelectTrigger className="w-full h-9">
-                        <SelectValue placeholder="Mood da trilha" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {MUSIC_OPTIONS.map((m) => (
-                          <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-medium text-muted-foreground">Tom de voz</label>
+                    <Input
+                      placeholder="Ex: Descontraído, profissional"
+                      value={options.tone}
+                      onChange={(e) => setOptions((o) => ({ ...o, tone: e.target.value }))}
+                      disabled={isGenerating}
+                      className="h-9 text-sm border-border/70 bg-background/60"
+                    />
+                  </div>
                 </div>
               )}
+            </div>
 
-              {/* Opções avançadas */}
-              <div className="rounded-lg border border-border overflow-hidden">
+            {/* Submit — botão gradiente com glow */}
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isGenerating || !command.trim()}
+              className={cn(
+                'relative flex w-full items-center justify-center gap-2',
+                'h-12 rounded-xl text-sm font-bold text-white',
+                'transition-all duration-200',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                'disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none',
+                'active:scale-[0.98]',
+                !isGenerating && command.trim() ? 'hover:opacity-90 hover:scale-[1.01]' : '',
+              )}
+              style={{
+                background: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #f97316 100%)',
+                boxShadow: isGenerating || !command.trim()
+                  ? 'none'
+                  : '0 4px 24px #8b5cf650, 0 2px 8px #ec489930',
+              }}
+            >
+              {isGenerating ? (
+                <><Loader2 className="size-4 animate-spin" />Gerando conteúdo...</>
+              ) : (
+                <><Wand2 className="size-4" />Gerar conteúdo</>
+              )}
+            </button>
+
+            {/* Retry on error */}
+            {lastError && !isGenerating && !result && (
+              <div className="rounded-xl border border-destructive/30 bg-destructive/5 px-3.5 py-3">
+                <p className="text-xs text-destructive mb-2">{lastError}</p>
                 <button
                   type="button"
-                  onClick={() => setAdvancedOpen((o) => !o)}
-                  className="flex w-full items-center justify-between px-3 py-2.5 text-sm font-medium hover:bg-muted/50 transition-colors"
+                  onClick={handleSubmit}
+                  disabled={!command.trim()}
+                  className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-destructive/40 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
                 >
-                  <span>Opções avançadas</span>
-                  <ChevronDown className={cn('size-4 text-muted-foreground transition-transform duration-200', advancedOpen && 'rotate-180')} />
+                  <RefreshCw className="size-3" />
+                  Tentar novamente
                 </button>
-
-                {advancedOpen && (
-                  <div className="border-t border-border px-3 pb-3 pt-3 flex flex-col gap-3">
-                    {/* Contagem só faz sentido para carrossel e story — vídeos têm cenas geradas pela IA */}
-                    {(format === 'carousel' || format === 'story') && (
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">
-                        {format === 'story' ? 'Número de frames' : 'Número de slides'}
-                        <span className="ml-1 font-normal">{format === 'story' ? '(1–5)' : '(3–10)'}</span>
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="range"
-                          min={format === 'story' ? 1 : 3}
-                          max={format === 'story' ? 5 : 10}
-                          step={1}
-                          value={options.count}
-                          onChange={(e) => setOptions((o) => ({ ...o, count: Number(e.target.value) }))}
-                          className="flex-1 h-1.5 accent-primary cursor-pointer"
-                          disabled={isGenerating}
-                        />
-                        <span className="w-5 text-center text-sm font-semibold tabular-nums">{options.count}</span>
-                      </div>
-                    </div>
-                    )}
-
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">Público-alvo</label>
-                      <Input
-                        placeholder="Ex: Empreendedores 25-40 anos"
-                        value={options.audience}
-                        onChange={(e) => setOptions((o) => ({ ...o, audience: e.target.value }))}
-                        disabled={isGenerating}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">Tom de voz</label>
-                      <Input
-                        placeholder="Ex: Descontraído, profissional"
-                        value={options.tone}
-                        onChange={(e) => setOptions((o) => ({ ...o, tone: e.target.value }))}
-                        disabled={isGenerating}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
+            )}
 
-              {/* Submit */}
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isGenerating || !command.trim()}
-                className={cn(
-                  'relative flex w-full items-center justify-center gap-2',
-                  'h-11 rounded-lg text-sm font-semibold',
-                  'bg-primary text-primary-foreground',
-                  'transition-all duration-150',
-                  'hover:bg-primary/90',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                  'disabled:opacity-40 disabled:cursor-not-allowed',
-                  'active:scale-[0.98]',
-                )}
-              >
-                {isGenerating ? (
-                  <><Loader2 className="size-4 animate-spin" />Gerando...</>
-                ) : (
-                  <>Gerar conteúdo</>
-                )}
-              </button>
-
-              {/* Retry on error */}
-              {lastError && !isGenerating && !result && (
-                <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2.5">
-                  <p className="text-xs text-destructive mb-2">{lastError}</p>
-                  <button
-                    type="button"
-                    onClick={handleSubmit}
-                    disabled={!command.trim()}
-                    className="flex w-full items-center justify-center gap-1.5 rounded-md border border-destructive/40 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
-                  >
-                    <RefreshCw className="size-3" />
-                    Tentar novamente
-                  </button>
-                </div>
-              )}
-
-            </CardContent>
-          </Card>
-        </div>
+          </div>
         </div>{/* end hidden wrapper */}
       </aside>
 

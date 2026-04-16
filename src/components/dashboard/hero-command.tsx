@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowUp,
   Layers,
@@ -20,14 +21,46 @@ const placeholders = [
 ];
 
 const FORMAT_PILLS = [
-  { id: "carousel",   label: "Carrossel", icon: Layers         },
-  { id: "post",       label: "Post",      icon: LayoutTemplate },
-  { id: "story",      label: "Story",     icon: Smartphone     },
-  { id: "video_16_9", label: "Vídeo",     icon: Video          },
-  { id: "caption",    label: "Legenda",   icon: FileText       },
+  {
+    id:       "carousel",
+    label:    "Carrossel",
+    icon:     Layers,
+    gradient: "linear-gradient(135deg,#8b5cf6,#7c3aed)",
+    shadow:   "0 2px 10px #8b5cf650",
+  },
+  {
+    id:       "post",
+    label:    "Post",
+    icon:     LayoutTemplate,
+    gradient: "linear-gradient(135deg,#6366f1,#4f46e5)",
+    shadow:   "0 2px 10px #6366f150",
+  },
+  {
+    id:       "story",
+    label:    "Story",
+    icon:     Smartphone,
+    gradient: "linear-gradient(135deg,#ec4899,#db2777)",
+    shadow:   "0 2px 10px #ec489950",
+  },
+  {
+    id:       "video_16_9",
+    label:    "Vídeo",
+    icon:     Video,
+    gradient: "linear-gradient(135deg,#3b82f6,#2563eb)",
+    shadow:   "0 2px 10px #3b82f650",
+  },
+  {
+    id:       "caption",
+    label:    "Legenda",
+    icon:     FileText,
+    gradient: "linear-gradient(135deg,#f59e0b,#d97706)",
+    shadow:   "0 2px 10px #f59e0b50",
+  },
 ];
 
 export function HeroCommand() {
+  const router = useRouter();
+
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isAnimating, setIsAnimating]           = useState(false);
   const [selectedFormat, setSelectedFormat]     = useState<string | null>(null);
@@ -54,20 +87,29 @@ export function HeroCommand() {
 
   const canSubmit = value.trim().length > 0;
 
+  const handleSubmit = () => {
+    if (!canSubmit) return;
+    const params = new URLSearchParams();
+    params.set("command", value.trim());
+    if (selectedFormat) params.set("format", selectedFormat);
+    router.push(`/create?${params.toString()}`);
+  };
+
   return (
-    <div className="relative max-w-2xl w-full mx-auto mt-2 mb-10">
+    <div className="relative max-w-2xl w-full mx-auto mt-2 mb-8">
       <div
         className={cn(
-          "relative bg-card rounded-2xl border flex flex-col overflow-hidden",
+          "relative bg-card/80 backdrop-blur-md rounded-2xl border flex flex-col overflow-hidden",
           "transition-all duration-300",
-          "border-border",
-          "focus-within:border-primary/40",
-          "focus-within:shadow-[0_0_0_3px_hsl(var(--primary)/0.12),0_8px_40px_hsl(var(--primary)/0.10)]",
+          "border-border/70",
+          "focus-within:border-primary/50",
+          "focus-within:shadow-[0_0_0_3px_hsl(var(--primary)/0.12),0_12px_48px_hsl(var(--primary)/0.14)]",
+          "shadow-[0_4px_24px_hsl(var(--primary)/0.06)]",
         )}
       >
         {/* Sparkle indicator */}
         <div className="absolute top-4 right-4 pointer-events-none">
-          <Sparkles className="h-3.5 w-3.5 text-primary/30" />
+          <Sparkles className="h-3.5 w-3.5 text-primary/25" />
         </div>
 
         {/* Textarea */}
@@ -77,7 +119,10 @@ export function HeroCommand() {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) e.preventDefault();
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit();
+              }
             }}
             className={cn(
               "w-full resize-none border-0 focus:outline-none focus:ring-0",
@@ -110,45 +155,51 @@ export function HeroCommand() {
         </div>
 
         {/* Divider */}
-        <div className="mx-5 h-px bg-border/60" />
+        <div className="mx-5 h-px bg-border/50" />
 
         {/* Bottom bar */}
         <div className="flex items-center gap-2 px-4 py-3">
           {/* Format pills */}
           <div className="flex items-center gap-1.5 flex-1 overflow-x-auto">
-            {FORMAT_PILLS.map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                data-no-scale
-                type="button"
-                onClick={() =>
-                  setSelectedFormat(id === selectedFormat ? null : id)
-                }
-                className={cn(
-                  "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium",
-                  "whitespace-nowrap shrink-0 transition-all duration-150",
-                  selectedFormat === id
-                    ? "bg-primary/15 text-primary border border-primary/30"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent",
-                )}
-              >
-                <Icon className="h-3 w-3" />
-                {label}
-              </button>
-            ))}
+            {FORMAT_PILLS.map(({ id, label, icon: Icon, gradient, shadow }) => {
+              const active = selectedFormat === id;
+              return (
+                <button
+                  key={id}
+                  data-no-scale
+                  type="button"
+                  onClick={() => setSelectedFormat(id === selectedFormat ? null : id)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold",
+                    "whitespace-nowrap shrink-0 transition-all duration-200",
+                    active
+                      ? "text-white border border-transparent scale-105"
+                      : "text-muted-foreground hover:text-foreground border border-border/60 hover:border-border",
+                  )}
+                  style={active ? { background: gradient, boxShadow: shadow } : {}}
+                >
+                  <Icon className="h-3 w-3" />
+                  {label}
+                </button>
+              );
+            })}
           </div>
 
           {/* Submit button */}
           <button
             type="button"
             disabled={!canSubmit}
+            onClick={handleSubmit}
             className={cn(
-              "flex items-center justify-center h-8 w-8 rounded-xl shrink-0",
+              "flex items-center justify-center h-9 w-9 rounded-xl shrink-0",
               "transition-all duration-200",
               canSubmit
-                ? "bg-primary text-primary-foreground shadow-[0_2px_16px_hsl(var(--primary)/0.45)] hover:opacity-90"
+                ? "text-white shadow-[0_4px_16px_#8b5cf660] hover:opacity-90 hover:scale-105 active:scale-95"
                 : "bg-muted text-muted-foreground cursor-not-allowed",
             )}
+            style={canSubmit ? {
+              background: "linear-gradient(135deg,#8b5cf6,#ec4899)",
+            } : {}}
           >
             <ArrowUp className="w-4 h-4" />
           </button>

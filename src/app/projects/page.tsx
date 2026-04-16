@@ -8,9 +8,8 @@ import { cn } from '@/lib/utils'
 import {
   Search, Grid2X2, List, Play, Eye, Copy, Download, Trash2,
   Loader2, Folder, Plus, ChevronLeft, ChevronRight,
-  Layers, LayoutTemplate, Smartphone, Video, PlaySquare, FileText,
+  Layers, LayoutTemplate, Smartphone, Video, PlaySquare, FileText, Sparkles,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { StaggerGrid, StaggerItem } from '@/components/motion/stagger-grid'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
@@ -43,12 +42,21 @@ const FORMAT_LABELS: Record<ProjectFormat, string> = {
 }
 
 const FORMAT_COLORS: Record<ProjectFormat, string> = {
-  carousel:   'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
-  post:       'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  story:      'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
-  video_16_9: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-  video_9_16: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  caption:    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  carousel:   'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300',
+  post:       'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300',
+  story:      'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300',
+  video_16_9: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+  video_9_16: 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300',
+  caption:    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+}
+
+const FORMAT_GRADIENTS: Record<ProjectFormat, string> = {
+  carousel:   'from-violet-500 to-purple-600',
+  post:       'from-purple-500 to-indigo-600',
+  story:      'from-pink-500 to-rose-500',
+  video_16_9: 'from-blue-500 to-cyan-500',
+  video_9_16: 'from-teal-500 to-emerald-500',
+  caption:    'from-amber-400 to-orange-500',
 }
 
 const FORMAT_ICONS: Record<ProjectFormat, React.ElementType> = {
@@ -62,6 +70,24 @@ const FORMAT_ICONS: Record<ProjectFormat, React.ElementType> = {
 
 const ALL_FORMATS: ProjectFormat[] = ['carousel', 'post', 'story', 'video_16_9', 'video_9_16', 'caption']
 const PAGE_SIZE = 12
+
+const FORMAT_PILL_GRADIENTS: Record<ProjectFormat, string> = {
+  carousel:   'linear-gradient(135deg,#8b5cf6,#7c3aed)',
+  post:       'linear-gradient(135deg,#6366f1,#4f46e5)',
+  story:      'linear-gradient(135deg,#ec4899,#db2777)',
+  video_16_9: 'linear-gradient(135deg,#3b82f6,#2563eb)',
+  video_9_16: 'linear-gradient(135deg,#14b8a6,#0d9488)',
+  caption:    'linear-gradient(135deg,#f59e0b,#d97706)',
+}
+
+const FORMAT_PILL_SHADOWS: Record<ProjectFormat, string> = {
+  carousel:   '0 2px 12px #8b5cf640',
+  post:       '0 2px 12px #6366f140',
+  story:      '0 2px 12px #ec489940',
+  video_16_9: '0 2px 12px #3b82f640',
+  video_9_16: '0 2px 12px #14b8a640',
+  caption:    '0 2px 12px #f59e0b40',
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -217,26 +243,28 @@ export default function ProjectsPage() {
     <div className="p-6 lg:p-8 max-w-[1600px] mx-auto">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Folder className="h-6 w-6 text-primary" />
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8 animate-section animate-section-1">
+        <div className="relative">
+          {/* Decorative glow */}
+          <div
+            className="absolute -top-4 -left-4 w-52 h-24 rounded-full pointer-events-none opacity-[0.14] blur-3xl"
+            style={{ background: 'linear-gradient(135deg, hsl(258 55% 56%), hsl(200 75% 55%))' }}
+          />
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="h-4 w-4 text-primary opacity-70" />
+            <span className="text-xs font-medium text-primary/70 uppercase tracking-widest">Biblioteca</span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">
             Projetos
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {total > 0 ? `${total} projeto${total !== 1 ? 's' : ''}` : 'Seus projetos criados'}
+          <p className="text-sm text-muted-foreground mt-1.5">
+            {total > 0 ? `${total} projeto${total !== 1 ? 's' : ''} criado${total !== 1 ? 's' : ''}` : 'Seus projetos criados com IA'}
           </p>
         </div>
-        <Link href="/create">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Projeto
-          </Button>
-        </Link>
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6 flex-wrap">
+      <div className="flex flex-col sm:flex-row gap-3 mb-6 flex-wrap animate-section animate-section-2">
 
         {/* Search */}
         <div className="relative w-full sm:w-64">
@@ -245,7 +273,7 @@ export default function ProjectsPage() {
             placeholder="Buscar projetos..."
             value={searchInput}
             onChange={e => setSearchInput(e.target.value)}
-            className="pl-9"
+            className="pl-9 border-border/70 bg-background/60"
           />
         </div>
 
@@ -254,11 +282,12 @@ export default function ProjectsPage() {
           <button
             onClick={() => setFormatFilter('all')}
             className={cn(
-              'px-3 py-1.5 rounded-full text-xs font-medium border transition-colors',
+              'px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200',
               formatFilter === 'all'
-                ? 'bg-primary text-primary-foreground border-primary'
-                : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground',
+                ? 'text-white border-transparent scale-[1.05]'
+                : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground',
             )}
+            style={formatFilter === 'all' ? { background: 'linear-gradient(135deg,#8b5cf6,#6366f1)', boxShadow: '0 2px 12px #8b5cf640' } : undefined}
           >
             Todos
           </button>
@@ -267,11 +296,15 @@ export default function ProjectsPage() {
               key={f}
               onClick={() => setFormatFilter(f)}
               className={cn(
-                'px-3 py-1.5 rounded-full text-xs font-medium border transition-colors',
+                'px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200',
                 formatFilter === f
-                  ? 'bg-primary text-primary-foreground border-primary'
-                  : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground',
+                  ? 'text-white border-transparent scale-[1.05]'
+                  : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground',
               )}
+              style={formatFilter === f ? {
+                background: FORMAT_PILL_GRADIENTS[f],
+                boxShadow: FORMAT_PILL_SHADOWS[f],
+              } : undefined}
             >
               {FORMAT_LABELS[f]}
             </button>
@@ -417,16 +450,16 @@ const ProjectCard = memo(function ProjectCard({
   const FormatIcon = FORMAT_ICONS[p.format]
 
   return (
-    <div className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow">
+    <div className="group rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/20 hover:shadow-[0_6px_28px_hsl(var(--primary)/0.12)] transition-all duration-200">
 
       {/* Thumbnail */}
       <div className="relative aspect-video bg-muted overflow-hidden">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={thumb} alt={p.title} className="w-full h-full object-cover" />
+          <img src={thumb} alt={p.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <FormatIcon className="h-10 w-10 text-muted-foreground/25" />
+          <div className={cn('w-full h-full flex items-center justify-center bg-gradient-to-br', FORMAT_GRADIENTS[p.format])}>
+            <FormatIcon className="h-10 w-10 text-white opacity-40" />
           </div>
         )}
         {/* Play overlay for videos */}
@@ -458,7 +491,8 @@ const ProjectCard = memo(function ProjectCard({
         <div className="flex items-center gap-1">
           <button
             onClick={() => onView(p)}
-            className="flex-1 flex items-center justify-center gap-1.5 h-7 rounded-md text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 h-7 rounded-md text-xs font-semibold text-white hover:opacity-90 transition-all"
+            style={{ background: FORMAT_PILL_GRADIENTS[p.format], boxShadow: FORMAT_PILL_SHADOWS[p.format] }}
           >
             <Eye className="size-3" />
             Ver
@@ -540,7 +574,8 @@ const ProjectRow = memo(function ProjectRow({
       <div className="flex items-center gap-1 shrink-0">
         <button
           onClick={() => onView(p)}
-          className="flex items-center gap-1.5 h-7 px-2 rounded-md text-xs font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+          className="flex items-center gap-1.5 h-7 px-2 rounded-md text-xs font-semibold text-white hover:opacity-90 transition-all"
+          style={{ background: FORMAT_PILL_GRADIENTS[p.format], boxShadow: FORMAT_PILL_SHADOWS[p.format] }}
         >
           <Eye className="size-3" />
           Ver
@@ -578,22 +613,30 @@ const ProjectRow = memo(function ProjectRow({
 
 function EmptyState({ hasFilters }: { hasFilters: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed rounded-xl bg-muted/20">
-      <Folder className="h-12 w-12 text-muted-foreground/30 mb-4" />
-      <h2 className="text-lg font-semibold mb-2">
+    <div className="flex flex-col items-center justify-center py-24 text-center rounded-2xl border border-dashed border-border bg-card/50">
+      <div
+        className="size-16 rounded-2xl flex items-center justify-center mb-5"
+        style={{ background: 'linear-gradient(135deg, hsl(258 55% 56% / 0.12), hsl(200 75% 55% / 0.08))' }}
+      >
+        <Folder className="h-7 w-7 text-primary/60" />
+      </div>
+      <h2 className="text-lg font-semibold mb-2 font-display">
         {hasFilters ? 'Nenhum projeto encontrado' : 'Nenhum projeto ainda'}
       </h2>
-      <p className="text-sm text-muted-foreground mb-6 max-w-sm">
+      <p className="text-sm text-muted-foreground mb-6 max-w-sm leading-relaxed">
         {hasFilters
           ? 'Tente ajustar os filtros ou a busca para encontrar seus projetos.'
-          : 'Crie seu primeiro projeto e comece a produzir conteúdo com IA.'}
+          : 'Crie seu primeiro projeto e comece a produzir conteúdo com IA em segundos.'}
       </p>
       {!hasFilters && (
         <Link href="/create">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
+          <button
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold shadow-[0_4px_20px_hsl(258_55%_56%/0.35)] hover:opacity-90 transition-opacity"
+            style={{ background: 'linear-gradient(135deg, hsl(258 55% 56%), hsl(258 55% 46%))' }}
+          >
+            <Plus className="h-4 w-4" />
             Criar Projeto
-          </Button>
+          </button>
         </Link>
       )}
     </div>

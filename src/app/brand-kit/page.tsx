@@ -4,8 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { BrandKit, getBrandKits, createBrandKit, updateBrandKit, deleteBrandKit, setDefaultBrandKit, uploadLogo } from '@/lib/api/brand-kits'
 import { BrandKitCard } from '@/components/brand-kit/brand-kit-card'
 import { BrandKitDialog } from '@/components/brand-kit/brand-kit-dialog'
-import { Button } from '@/components/ui/button'
-import { Plus, Loader2 } from 'lucide-react'
+import { Plus, Loader2, Sparkles, Palette } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function BrandKitPage() {
@@ -79,39 +78,52 @@ export default function BrandKitPage() {
 
   return (
     <div className="p-6 lg:p-10 max-w-[1400px] mx-auto w-full overflow-y-auto">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Brand Kits</h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Identidades visuais para suas gerações de conteúdo.
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-10 animate-section animate-section-1">
+        <div className="relative">
+          {/* Decorative glow */}
+          <div
+            className="absolute -top-4 -left-4 w-52 h-24 rounded-full pointer-events-none opacity-[0.14] blur-3xl"
+            style={{ background: 'linear-gradient(135deg, hsl(330 65% 58%), hsl(258 55% 56%))' }}
+          />
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="h-4 w-4 text-primary opacity-70" />
+            <span className="text-xs font-medium text-primary/70 uppercase tracking-widest">Identidade Visual</span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">Brand Kits</h1>
+          <p className="text-muted-foreground mt-1.5 text-sm">
+            Identidades visuais para suas gerações de conteúdo com IA.
           </p>
         </div>
-        <Button onClick={() => handleCreateOrEditClick()} size="sm" className="w-full md:w-auto">
-          <Plus className="mr-1.5 h-3.5 w-3.5" />
-          Novo Brand Kit
-        </Button>
       </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center p-12 text-muted-foreground">
-          <Loader2 className="h-8 w-8 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary/50" />
         </div>
       ) : brandKits.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-border rounded-lg">
-          <div className="size-12 rounded-lg bg-muted flex items-center justify-center mb-4">
-            <Plus className="h-5 w-5 text-muted-foreground" />
+
+        <div className="flex flex-col items-center justify-center py-24 text-center rounded-2xl border border-dashed border-border bg-card/50">
+          <div
+            className="size-16 rounded-2xl flex items-center justify-center mb-5"
+            style={{ background: 'linear-gradient(135deg, hsl(330 65% 58% / 0.12), hsl(258 55% 56% / 0.08))' }}
+          >
+            <Palette className="h-7 w-7 text-primary/60" />
           </div>
-          <h2 className="text-sm font-medium text-foreground mb-1">Nenhum Brand Kit ainda</h2>
-          <p className="text-muted-foreground text-xs mb-6 max-w-xs mx-auto">
+          <h2 className="text-base font-semibold text-foreground mb-2 font-display">Nenhum Brand Kit ainda</h2>
+          <p className="text-muted-foreground text-sm mb-6 max-w-xs mx-auto leading-relaxed">
             Crie seu primeiro Brand Kit para gerar conteúdo com a identidade visual da sua marca.
           </p>
-          <Button onClick={() => handleCreateOrEditClick()} size="sm">
-            <Plus className="mr-1.5 h-3.5 w-3.5" />
+          <button
+            onClick={() => handleCreateOrEditClick()}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+            style={{ background: 'linear-gradient(135deg,#ec4899,#8b5cf6)', boxShadow: '0 4px 20px #ec489940' }}
+          >
+            <Plus className="h-4 w-4" />
             Criar primeiro Brand Kit
-          </Button>
+          </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-20 animate-section animate-section-2">
           {brandKits.map((kit) => (
             <BrandKitCard
               key={kit.id}

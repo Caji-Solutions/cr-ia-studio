@@ -6,7 +6,7 @@ import { CopyPlus, Folder, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const mobileItems = [
-  { name: "Dashboard", href: "/", icon: Home },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Criar",     href: "/create",   icon: CopyPlus },
   { name: "Projetos",  href: "/projects", icon: Folder },
 ];

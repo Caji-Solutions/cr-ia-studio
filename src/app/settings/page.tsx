@@ -7,9 +7,8 @@ import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import {
   Key, Sliders, Loader2, Eye, EyeOff,
-  CheckCircle2, XCircle, RefreshCw, Sun, Moon,
+  CheckCircle2, XCircle, RefreshCw, Sun, Moon, Sparkles,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Switch } from '@/components/ui/switch'
@@ -109,78 +108,124 @@ export default function SettingsPage() {
     <div className="p-6 lg:p-8 max-w-2xl mx-auto">
 
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Configurações</h1>
-        <p className="text-sm text-muted-foreground mt-1">
+      <div className="mb-10 relative animate-section animate-section-1">
+        {/* Decorative glow */}
+        <div
+          className="absolute -top-4 -left-4 w-52 h-24 rounded-full pointer-events-none opacity-[0.14] blur-3xl"
+          style={{ background: 'linear-gradient(135deg, hsl(27 90% 57%), hsl(258 55% 56%))' }}
+        />
+        <div className="flex items-center gap-2 mb-1">
+          <Sparkles className="h-4 w-4 text-primary opacity-70" />
+          <span className="text-xs font-medium text-primary/70 uppercase tracking-widest">Painel de Controle</span>
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">Configurações</h1>
+        <p className="text-sm text-muted-foreground mt-1.5">
           Chaves de API e preferências da interface.
         </p>
       </div>
 
       <Tabs defaultValue="apikeys">
-        <TabsList className="mb-6 w-full grid grid-cols-2">
-          <TabsTrigger value="apikeys" className="gap-1.5">
-            <Key  className="size-3.5" /> API Keys
+        <TabsList className="mb-6 w-full grid grid-cols-2 rounded-xl p-1 animate-section animate-section-2">
+          <TabsTrigger value="apikeys" className="gap-1.5 rounded-lg">
+            <Key className="size-3.5" /> API Keys
           </TabsTrigger>
-          <TabsTrigger value="prefs"   className="gap-1.5">
+          <TabsTrigger value="prefs" className="gap-1.5 rounded-lg">
             <Sliders className="size-3.5" /> Preferências
           </TabsTrigger>
         </TabsList>
 
         {/* ── Tab: API Keys ─────────────────────────────────────────────────────── */}
-        <TabsContent value="apikeys" className="space-y-6">
+        <TabsContent value="apikeys" className="space-y-5 animate-section animate-section-3">
 
-          <div className="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-800/40 dark:bg-blue-900/20 px-4 py-3">
+          <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:border-blue-800/40 dark:from-blue-900/20 dark:to-indigo-900/20 px-4 py-3.5">
             <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
-              As chaves são definidas no arquivo <code className="font-mono bg-blue-100 dark:bg-blue-900/40 px-1 rounded">.env.local</code> na raiz do projeto.
-              Use o campo abaixo para testar uma chave antes de configurá-la.
+              As chaves são definidas no arquivo{' '}
+              <code className="font-mono bg-blue-100 dark:bg-blue-900/40 px-1.5 py-0.5 rounded-md">.env.local</code>{' '}
+              na raiz do projeto. Use o campo abaixo para testar uma chave antes de configurá-la.
             </p>
           </div>
 
           {/* Gemini */}
-          <ApiKeyField
-            label="Google Gemini"
-            placeholder="AIza... (para testar)"
-            hint={
-              envStatus === null
-                ? 'Verificando...'
-                : envStatus.gemini
-                  ? 'GEMINI_API_KEY configurada no .env.local'
-                  : 'GEMINI_API_KEY não encontrada no .env.local — necessária para gerar conteúdo'
-            }
-            configured={envStatus?.gemini ?? null}
-            state={gemini}
-            onChange={v => setGemini(prev => ({ ...prev, value: v, testStatus: 'idle', testMessage: '' }))}
-            onToggleShow={() => setGemini(prev => ({ ...prev, showValue: !prev.showValue }))}
-            onTest={() => testKey('gemini')}
-          />
+          <div className="rounded-2xl border border-border bg-card overflow-hidden">
+            <div className="px-4 py-3 border-b border-border flex items-center gap-2"
+              style={{ background: 'linear-gradient(90deg, hsl(258 55% 56% / 0.06), transparent)' }}
+            >
+              <div className="size-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #4285f4, #0f9d58)' }}>
+                <Key className="size-3.5 text-white" />
+              </div>
+              <span className="text-sm font-semibold">Google Gemini</span>
+            </div>
+            <div className="p-4">
+              <ApiKeyField
+                label=""
+                placeholder="AIza... (para testar)"
+                hint={
+                  envStatus === null
+                    ? 'Verificando...'
+                    : envStatus.gemini
+                      ? 'GEMINI_API_KEY configurada no .env.local'
+                      : 'GEMINI_API_KEY não encontrada no .env.local — necessária para gerar conteúdo'
+                }
+                configured={envStatus?.gemini ?? null}
+                state={gemini}
+                onChange={v => setGemini(prev => ({ ...prev, value: v, testStatus: 'idle', testMessage: '' }))}
+                onToggleShow={() => setGemini(prev => ({ ...prev, showValue: !prev.showValue }))}
+                onTest={() => testKey('gemini')}
+              />
+            </div>
+          </div>
 
           {/* OpenAI — campo mantido para compatibilidade mas imagens usam Imagen 3 */}
-          <ApiKeyField
-            label="OpenAI (opcional, legado)"
-            placeholder="sk-... (para testar)"
-            hint={
-              envStatus === null
-                ? 'Verificando...'
-                : envStatus.openai
-                  ? 'OPENAI_API_KEY configurada no .env.local'
-                  : 'OPENAI_API_KEY não encontrada — não necessária, imagens geradas pelo Imagen 3 (Google)'
-            }
-            configured={envStatus?.openai ?? null}
-            state={openai}
-            onChange={v => setOpenai(prev => ({ ...prev, value: v, testStatus: 'idle', testMessage: '' }))}
-            onToggleShow={() => setOpenai(prev => ({ ...prev, showValue: !prev.showValue }))}
-            onTest={() => testKey('openai')}
-          />
+          <div className="rounded-2xl border border-border bg-card overflow-hidden">
+            <div className="px-4 py-3 border-b border-border flex items-center gap-2"
+              style={{ background: 'linear-gradient(90deg, hsl(27 90% 57% / 0.06), transparent)' }}
+            >
+              <div className="size-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #10a37f, #1a7f64)' }}>
+                <Key className="size-3.5 text-white" />
+              </div>
+              <span className="text-sm font-semibold">OpenAI</span>
+              <span className="text-xs text-muted-foreground ml-1">(opcional, legado)</span>
+            </div>
+            <div className="p-4">
+              <ApiKeyField
+                label=""
+                placeholder="sk-... (para testar)"
+                hint={
+                  envStatus === null
+                    ? 'Verificando...'
+                    : envStatus.openai
+                      ? 'OPENAI_API_KEY configurada no .env.local'
+                      : 'OPENAI_API_KEY não encontrada — não necessária, imagens geradas pelo Imagen 3 (Google)'
+                }
+                configured={envStatus?.openai ?? null}
+                state={openai}
+                onChange={v => setOpenai(prev => ({ ...prev, value: v, testStatus: 'idle', testMessage: '' }))}
+                onToggleShow={() => setOpenai(prev => ({ ...prev, showValue: !prev.showValue }))}
+                onTest={() => testKey('openai')}
+              />
+            </div>
+          </div>
 
         </TabsContent>
 
         {/* ── Tab: Preferências ────────────────────────────────────────────────── */}
-        <TabsContent value="prefs" className="space-y-6">
+        <TabsContent value="prefs" className="space-y-4 animate-section animate-section-3">
 
           {/* Dark mode */}
-          <div className="flex items-center justify-between rounded-lg border border-border p-4">
+          <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-4 hover:border-primary/20 transition-colors">
             <div className="flex items-center gap-3">
-              {isDark ? <Moon className="size-4 text-muted-foreground" /> : <Sun className="size-4 text-muted-foreground" />}
+              <div
+                className="size-9 rounded-xl flex items-center justify-center"
+                style={{ background: isDark
+                  ? 'linear-gradient(135deg, hsl(258 55% 56% / 0.2), hsl(220 70% 58% / 0.2))'
+                  : 'linear-gradient(135deg, hsl(50 85% 55% / 0.2), hsl(27 90% 57% / 0.2))'
+                }}
+              >
+                {isDark
+                  ? <Moon className="size-4 text-violet-400" />
+                  : <Sun className="size-4 text-amber-500" />
+                }
+              </div>
               <div>
                 <p className="text-sm font-medium">Modo escuro</p>
                 <p className="text-xs text-muted-foreground">Alterna o tema da interface</p>
@@ -190,11 +235,11 @@ export default function SettingsPage() {
           </div>
 
           {/* Default format */}
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium">
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <label className="text-sm font-medium block mb-0.5">
               Formato padrão
             </label>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground mb-3">
               Formato pré-selecionado ao criar um novo projeto.
             </p>
             <Select value={defaultFormat} onValueChange={v => setDefaultFormat(v as ProjectFormat)}>
@@ -209,9 +254,13 @@ export default function SettingsPage() {
             </Select>
           </div>
 
-          <Button onClick={savePreferences} className="w-full sm:w-auto">
+          <button
+            onClick={savePreferences}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+            style={{ background: 'linear-gradient(135deg,#f97316,#8b5cf6)', boxShadow: '0 4px 20px #f9731640' }}
+          >
             Salvar Preferências
-          </Button>
+          </button>
 
         </TabsContent>
       </Tabs>
@@ -240,7 +289,7 @@ function ApiKeyField({ label, placeholder, hint, configured, state, onChange, on
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium">{label}</label>
+        {label && <label className="text-sm font-medium">{label}</label>}
         {configured !== null && (
           configured
             ? <span className="flex items-center gap-1 text-xs text-emerald-600 dark:text-emerald-400"><CheckCircle2 className="size-3.5" /> Configurada</span>

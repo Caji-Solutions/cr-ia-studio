@@ -161,6 +161,48 @@
   }
 }
 
+/* ── Wave background animations ───────────────────────────────────────────── */
+
+/* Onda 1 — flui da esquerda para a direita (violet) */
+@keyframes wave-flow-1 {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Onda 2 — flui da direita para a esquerda (pink) */
+@keyframes wave-flow-2 {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+/* Onda 3 — flui mais rápido (teal) */
+@keyframes wave-flow-3 {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Aurora: expande e contrai suavemente */
+@keyframes aurora-breathe {
+  0%, 100% { opacity: 0.045; transform: scale(1); }
+  50%       { opacity: 0.075; transform: scale(1.08); }
+}
+
+/* Entrada de seção: sobe e aparece */
+@keyframes section-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.animate-section {
+  animation: section-fade-up 0.5s ease-out forwards;
+  opacity: 0;
+}
+.animate-section-1 { animation-delay: 0.05s; }
+.animate-section-2 { animation-delay: 0.15s; }
+.animate-section-3 { animation-delay: 0.25s; }
+.animate-section-4 { animation-delay: 0.35s; }
+.animate-section-5 { animation-delay: 0.45s; }
+
 /* ── Animations ──────────────────────────────────────────────────────────── */
 
 @keyframes gradient-shift {
