@@ -119,7 +119,15 @@ export async function POST(request: NextRequest) {
 
   if (!project) return fail('Projeto não encontrado', 404)
 
-  const content = (bodyContent ?? (project.content_data ? JSON.parse(project.content_data) : null)) as VideoContent | null
+  let parsedContentData: VideoContent | null = null
+  if (project.content_data) {
+    try {
+      parsedContentData = JSON.parse(project.content_data) as VideoContent
+    } catch {
+      return fail('Dados do projeto corrompidos (JSON inválido)', 422)
+    }
+  }
+  const content = (bodyContent ?? parsedContentData) as VideoContent | null
   const format  = (bodyFormat ?? project.format) as ProjectFormat
 
   if (!content?.scenes?.length) return fail('Dados de vídeo não encontrados no projeto', 400)

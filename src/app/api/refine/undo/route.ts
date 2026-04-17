@@ -50,7 +50,12 @@ export async function POST(request: NextRequest) {
     return fail('Sem versão anterior disponível para desfazer', 400)
   }
 
-  const snapshot = JSON.parse(row.previous_content_data as string) as PreviousSnapshot
+  let snapshot: PreviousSnapshot
+  try {
+    snapshot = JSON.parse(row.previous_content_data as string) as PreviousSnapshot
+  } catch {
+    return fail('Snapshot anterior corrompido, não é possível desfazer', 422)
+  }
 
   // ── Restaura snapshot ───────────────────────────────────────────────────────
   db.prepare(`

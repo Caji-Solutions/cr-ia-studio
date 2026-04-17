@@ -13,11 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { useAuth } from '@/hooks/useAuth'
 
 const navItems = [
@@ -74,33 +69,27 @@ export function Sidebar() {
 
             return (
               <li key={item.name}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        'relative flex items-center gap-3 rounded-xl px-3 py-2.5 w-full',
-                        'transition-all duration-150 text-sm',
-                        isActive
-                          ? 'bg-primary/10 text-primary font-semibold'
-                          : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
-                      )}
-                    >
-                      {isActive && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-r-full"
-                          style={{ background: 'linear-gradient(180deg, hsl(258 55% 56%), hsl(27 90% 57%))' }}
-                        />
-                      )}
-                      <Icon className={cn('h-[18px] w-[18px] shrink-0', isActive ? 'text-primary' : '')} />
-                      <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                        {item.name}
-                      </span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="right" className="group-hover:hidden">
+                <Link
+                  href={item.href}
+                  title={item.name}
+                  className={cn(
+                    'relative flex items-center gap-3 rounded-xl px-3 py-2.5 w-full',
+                    'transition-all duration-150 text-sm',
+                    isActive
+                      ? 'bg-primary/10 text-primary font-semibold'
+                      : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
+                  )}
+                >
+                  {isActive && (
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-r-full"
+                      style={{ background: 'linear-gradient(180deg, hsl(258 55% 56%), hsl(27 90% 57%))' }}
+                    />
+                  )}
+                  <Icon className={cn('h-[18px] w-[18px] shrink-0', isActive ? 'text-primary' : '')} />
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                     {item.name}
-                  </TooltipContent>
-                </Tooltip>
+                  </span>
+                </Link>
               </li>
             )
           })}

@@ -41,14 +41,6 @@ const FORMAT_LABELS: Record<ProjectFormat, string> = {
   caption:    'Legenda',
 }
 
-const FORMAT_COLORS: Record<ProjectFormat, string> = {
-  carousel:   'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300',
-  post:       'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300',
-  story:      'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300',
-  video_16_9: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-  video_9_16: 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300',
-  caption:    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-}
 
 const FORMAT_GRADIENTS: Record<ProjectFormat, string> = {
   carousel:   'from-violet-500 to-purple-600',
@@ -242,52 +234,63 @@ export default function ProjectsPage() {
   return (
     <div className="p-6 lg:p-8 max-w-[1600px] mx-auto">
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8 animate-section animate-section-1">
+      {/* ── Header ──────────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 animate-section animate-section-1">
         <div className="relative">
-          {/* Decorative glow */}
           <div
             className="absolute -top-4 -left-4 w-52 h-24 rounded-full pointer-events-none opacity-[0.14] blur-3xl"
             style={{ background: 'linear-gradient(135deg, hsl(258 55% 56%), hsl(200 75% 55%))' }}
           />
-          <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="h-4 w-4 text-primary opacity-70" />
-            <span className="text-xs font-medium text-primary/70 uppercase tracking-widest">Biblioteca</span>
+          <div className="flex items-center gap-2 mb-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-primary opacity-70" />
+            <span className="text-xs font-semibold text-primary/70 uppercase tracking-widest">Biblioteca</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">
             Projetos
           </h1>
           <p className="text-sm text-muted-foreground mt-1.5">
-            {total > 0 ? `${total} projeto${total !== 1 ? 's' : ''} criado${total !== 1 ? 's' : ''}` : 'Seus projetos criados com IA'}
+            {total > 0
+              ? `${total} projeto${total !== 1 ? 's' : ''} criado${total !== 1 ? 's' : ''}`
+              : 'Seus projetos criados com IA'}
           </p>
         </div>
+
+        <Link href="/create">
+          <button
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold shrink-0 hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+            style={{ background: 'linear-gradient(135deg,#8b5cf6,#6366f1)', boxShadow: '0 4px 20px #8b5cf640' }}
+          >
+            <Plus className="h-4 w-4" />
+            Criar novo
+          </button>
+        </Link>
       </div>
 
-      {/* Toolbar */}
+      {/* ── Toolbar ─────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6 flex-wrap animate-section animate-section-2">
 
         {/* Search */}
         <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Buscar projetos..."
             value={searchInput}
             onChange={e => setSearchInput(e.target.value)}
-            className="pl-9 border-border/70 bg-background/60"
+            className="pl-9 h-9 border-border/70 bg-background/60 text-sm"
           />
         </div>
 
-        {/* Format filter */}
+        {/* Format filter pills */}
         <div className="flex gap-1.5 flex-wrap items-center">
           <button
             onClick={() => setFormatFilter('all')}
             className={cn(
               'px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200',
               formatFilter === 'all'
-                ? 'text-white border-transparent scale-[1.05]'
-                : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground',
+                ? 'text-white border-transparent shadow-[0_2px_12px_#8b5cf640]'
+                : 'border-border/60 text-muted-foreground hover:border-primary/30 hover:text-foreground bg-background/60',
             )}
-            style={formatFilter === 'all' ? { background: 'linear-gradient(135deg,#8b5cf6,#6366f1)', boxShadow: '0 2px 12px #8b5cf640' } : undefined}
+            style={formatFilter === 'all' ? { background: 'linear-gradient(135deg,#8b5cf6,#6366f1)' } : undefined}
           >
             Todos
           </button>
@@ -298,12 +301,12 @@ export default function ProjectsPage() {
               className={cn(
                 'px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200',
                 formatFilter === f
-                  ? 'text-white border-transparent scale-[1.05]'
-                  : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground',
+                  ? 'text-white border-transparent'
+                  : 'border-border/60 text-muted-foreground hover:border-primary/30 hover:text-foreground bg-background/60',
               )}
               style={formatFilter === f ? {
                 background: FORMAT_PILL_GRADIENTS[f],
-                boxShadow: FORMAT_PILL_SHADOWS[f],
+                boxShadow:  FORMAT_PILL_SHADOWS[f],
               } : undefined}
             >
               {FORMAT_LABELS[f]}
@@ -312,39 +315,39 @@ export default function ProjectsPage() {
         </div>
 
         {/* View toggle */}
-        <div className="flex gap-1 sm:ml-auto">
+        <div className="flex gap-1 sm:ml-auto items-center p-0.5 rounded-lg bg-muted/60 border border-border/50">
           <button
             onClick={() => toggleView('grid')}
             className={cn(
-              'size-8 flex items-center justify-center rounded-md border transition-colors',
+              'size-7 flex items-center justify-center rounded-md transition-all duration-150',
               viewMode === 'grid'
-                ? 'bg-primary text-primary-foreground border-primary'
-                : 'border-border text-muted-foreground hover:bg-muted',
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground',
             )}
             title="Grade"
           >
-            <Grid2X2 className="size-4" />
+            <Grid2X2 className="size-3.5" />
           </button>
           <button
             onClick={() => toggleView('list')}
             className={cn(
-              'size-8 flex items-center justify-center rounded-md border transition-colors',
+              'size-7 flex items-center justify-center rounded-md transition-all duration-150',
               viewMode === 'list'
-                ? 'bg-primary text-primary-foreground border-primary'
-                : 'border-border text-muted-foreground hover:bg-muted',
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground',
             )}
             title="Lista"
           >
-            <List className="size-4" />
+            <List className="size-3.5" />
           </button>
         </div>
 
       </div>
 
-      {/* Content */}
+      {/* ── Content ─────────────────────────────────────────────────── */}
       {loading ? (
         <div className="flex items-center justify-center py-24">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground/50" />
         </div>
       ) : projects.length === 0 ? (
         <EmptyState hasFilters={formatFilter !== 'all' || search !== ''} />
@@ -387,21 +390,25 @@ export default function ProjectsPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-8">
+            <div className="flex items-center justify-center gap-2 mt-10">
               <button
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="size-8 flex items-center justify-center rounded-md border border-border disabled:opacity-40 hover:bg-muted transition-colors"
+                className="size-8 flex items-center justify-center rounded-lg border border-border/70 bg-background/60 disabled:opacity-40 hover:bg-muted hover:border-border transition-all"
               >
                 <ChevronLeft className="size-4" />
               </button>
-              <span className="text-sm text-muted-foreground px-2">
-                {page} / {totalPages}
-              </span>
+
+              <div className="flex items-center gap-1 px-2">
+                <span className="text-sm font-semibold tabular-nums">{page}</span>
+                <span className="text-sm text-muted-foreground">/</span>
+                <span className="text-sm text-muted-foreground tabular-nums">{totalPages}</span>
+              </div>
+
               <button
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="size-8 flex items-center justify-center rounded-md border border-border disabled:opacity-40 hover:bg-muted transition-colors"
+                className="size-8 flex items-center justify-center rounded-lg border border-border/70 bg-background/60 disabled:opacity-40 hover:bg-muted hover:border-border transition-all"
               >
                 <ChevronRight className="size-4" />
               </button>
@@ -429,7 +436,7 @@ export default function ProjectsPage() {
   )
 }
 
-// ─── Project Card (Grid view) ─────────────────────────────────────────────────
+// ─── Project Card (Grid) ──────────────────────────────────────────────────────
 
 interface CardProps {
   project:       Project
@@ -445,69 +452,82 @@ interface CardProps {
 const ProjectCard = memo(function ProjectCard({
   project: p, onView, onVideoPlay, onDelete, onDuplicate, onDownload, isDeleting, isDuplicating,
 }: CardProps) {
-  const thumb     = getThumbnail(p)
-  const hasVideo  = isVideoFormat(p.format) && !!p.video_url
+  const thumb      = getThumbnail(p)
+  const hasVideo   = isVideoFormat(p.format) && !!p.video_url
   const FormatIcon = FORMAT_ICONS[p.format]
 
   return (
-    <div className="group rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/20 hover:shadow-[0_6px_28px_hsl(var(--primary)/0.12)] transition-all duration-200">
+    <div className="group relative rounded-2xl border border-border/60 bg-card overflow-hidden transition-all duration-250 hover:border-border hover:shadow-[0_8px_32px_rgba(0,0,0,0.10)] hover:-translate-y-0.5">
 
       {/* Thumbnail */}
       <div className="relative aspect-video bg-muted overflow-hidden">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={thumb} alt={p.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300" />
+          <img
+            src={thumb}
+            alt={p.title}
+            className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-400"
+          />
         ) : (
           <div className={cn('w-full h-full flex items-center justify-center bg-gradient-to-br', FORMAT_GRADIENTS[p.format])}>
-            <FormatIcon className="h-10 w-10 text-white opacity-40" />
+            <FormatIcon className="h-10 w-10 text-white opacity-30" />
           </div>
         )}
+
+        {/* Format badge overlay */}
+        <div className="absolute top-2.5 left-2.5">
+          <span
+            className="px-2 py-0.5 rounded-full text-[10px] font-semibold text-white backdrop-blur-sm border border-white/20"
+            style={{ background: FORMAT_PILL_GRADIENTS[p.format] }}
+          >
+            {FORMAT_LABELS[p.format]}
+          </span>
+        </div>
+
         {/* Play overlay for videos */}
         {hasVideo && (
           <button
             onClick={() => onVideoPlay({ url: p.video_url!, title: p.title })}
             className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity"
           >
-            <div className="size-12 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
-              <Play className="size-5 fill-foreground text-foreground ml-0.5" />
+            <div className="size-11 rounded-full bg-white/90 flex items-center justify-center shadow-lg backdrop-blur-sm">
+              <Play className="size-4 fill-foreground text-foreground ml-0.5" />
             </div>
           </button>
         )}
       </div>
 
       {/* Info */}
-      <div className="p-3">
-        <h3 className="font-medium text-sm leading-snug line-clamp-2 mb-2" title={p.title}>
+      <div className="p-3.5">
+        <h3 className="font-semibold text-sm leading-snug line-clamp-2 mb-3" title={p.title}>
           {p.title}
         </h3>
+
         <div className="flex items-center justify-between gap-2 mb-3">
-          <span className={cn('px-2 py-0.5 rounded-full text-xs font-medium shrink-0', FORMAT_COLORS[p.format])}>
-            {FORMAT_LABELS[p.format]}
-          </span>
-          <span className="text-xs text-muted-foreground truncate">{relativeDate(p.updated_at)}</span>
+          <span className="text-xs text-muted-foreground">{relativeDate(p.updated_at)}</span>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={() => onView(p)}
-            className="flex-1 flex items-center justify-center gap-1.5 h-7 rounded-md text-xs font-semibold text-white hover:opacity-90 transition-all"
+            className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-xl text-xs font-semibold text-white hover:opacity-90 transition-all active:scale-[0.97]"
             style={{ background: FORMAT_PILL_GRADIENTS[p.format], boxShadow: FORMAT_PILL_SHADOWS[p.format] }}
           >
             <Eye className="size-3" />
-            Ver
+            Abrir
           </button>
           <button
             onClick={() => onDuplicate(p)}
             disabled={isDuplicating}
-            className="size-7 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors disabled:opacity-50"
+            className="size-8 flex items-center justify-center rounded-xl border border-border/70 text-muted-foreground hover:bg-muted hover:text-foreground hover:border-border transition-all disabled:opacity-50"
             title="Duplicar"
           >
             {isDuplicating ? <Loader2 className="size-3 animate-spin" /> : <Copy className="size-3" />}
           </button>
           <button
             onClick={() => onDownload(p)}
-            className="size-7 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            className="size-8 flex items-center justify-center rounded-xl border border-border/70 text-muted-foreground hover:bg-muted hover:text-foreground hover:border-border transition-all"
             title="Download"
           >
             <Download className="size-3" />
@@ -515,38 +535,37 @@ const ProjectCard = memo(function ProjectCard({
           <button
             onClick={() => onDelete(p)}
             disabled={isDeleting}
-            className="size-7 flex items-center justify-center rounded-md border border-destructive/40 text-destructive/60 hover:bg-destructive/10 hover:text-destructive transition-colors disabled:opacity-50"
+            className="size-8 flex items-center justify-center rounded-xl border border-destructive/30 text-destructive/50 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50 transition-all disabled:opacity-50"
             title="Deletar"
           >
             {isDeleting ? <Loader2 className="size-3 animate-spin" /> : <Trash2 className="size-3" />}
           </button>
         </div>
       </div>
-
     </div>
   )
 })
 
-// ─── Project Row (List view) ──────────────────────────────────────────────────
+// ─── Project Row (List) ───────────────────────────────────────────────────────
 
 const ProjectRow = memo(function ProjectRow({
   project: p, onView, onVideoPlay, onDelete, onDuplicate, onDownload, isDeleting, isDuplicating,
 }: CardProps) {
-  const thumb     = getThumbnail(p)
-  const hasVideo  = isVideoFormat(p.format) && !!p.video_url
+  const thumb      = getThumbnail(p)
+  const hasVideo   = isVideoFormat(p.format) && !!p.video_url
   const FormatIcon = FORMAT_ICONS[p.format]
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 hover:shadow-sm transition-shadow group">
+    <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-card px-3.5 py-2.5 hover:border-border hover:shadow-[0_2px_12px_rgba(0,0,0,0.07)] transition-all duration-200 group">
 
       {/* Thumb */}
-      <div className="relative w-20 h-14 rounded-lg bg-muted overflow-hidden shrink-0">
+      <div className="relative w-20 h-[52px] rounded-lg bg-muted overflow-hidden shrink-0">
         {thumb ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={thumb} alt={p.title} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <FormatIcon className="h-6 w-6 text-muted-foreground/25" />
+          <div className={cn('w-full h-full flex items-center justify-center bg-gradient-to-br', FORMAT_GRADIENTS[p.format])}>
+            <FormatIcon className="h-5 w-5 text-white opacity-40" />
           </div>
         )}
         {hasVideo && (
@@ -554,7 +573,7 @@ const ProjectRow = memo(function ProjectRow({
             onClick={() => onVideoPlay({ url: p.video_url!, title: p.title })}
             className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg"
           >
-            <Play className="size-4 fill-white text-white" />
+            <Play className="size-3.5 fill-white text-white" />
           </button>
         )}
       </div>
@@ -562,8 +581,11 @@ const ProjectRow = memo(function ProjectRow({
       {/* Info */}
       <div className="flex-1 min-w-0">
         <h3 className="font-medium text-sm truncate">{p.title}</h3>
-        <div className="flex items-center gap-2 mt-1">
-          <span className={cn('px-2 py-0.5 rounded-full text-xs font-medium shrink-0', FORMAT_COLORS[p.format])}>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span
+            className="px-1.5 py-px rounded-full text-[10px] font-semibold text-white"
+            style={{ background: FORMAT_PILL_GRADIENTS[p.format] }}
+          >
             {FORMAT_LABELS[p.format]}
           </span>
           <span className="text-xs text-muted-foreground">{relativeDate(p.updated_at)}</span>
@@ -574,23 +596,23 @@ const ProjectRow = memo(function ProjectRow({
       <div className="flex items-center gap-1 shrink-0">
         <button
           onClick={() => onView(p)}
-          className="flex items-center gap-1.5 h-7 px-2 rounded-md text-xs font-semibold text-white hover:opacity-90 transition-all"
-          style={{ background: FORMAT_PILL_GRADIENTS[p.format], boxShadow: FORMAT_PILL_SHADOWS[p.format] }}
+          className="flex items-center gap-1.5 h-7 px-3 rounded-lg text-xs font-semibold text-white hover:opacity-90 transition-all active:scale-[0.97]"
+          style={{ background: FORMAT_PILL_GRADIENTS[p.format] }}
         >
           <Eye className="size-3" />
-          Ver
+          Abrir
         </button>
         <button
           onClick={() => onDuplicate(p)}
           disabled={isDuplicating}
-          className="size-7 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors disabled:opacity-50"
+          className="size-7 flex items-center justify-center rounded-lg border border-border/70 text-muted-foreground hover:bg-muted hover:text-foreground transition-all disabled:opacity-50"
           title="Duplicar"
         >
           {isDuplicating ? <Loader2 className="size-3 animate-spin" /> : <Copy className="size-3" />}
         </button>
         <button
           onClick={() => onDownload(p)}
-          className="size-7 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          className="size-7 flex items-center justify-center rounded-lg border border-border/70 text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
           title="Download"
         >
           <Download className="size-3" />
@@ -598,13 +620,12 @@ const ProjectRow = memo(function ProjectRow({
         <button
           onClick={() => onDelete(p)}
           disabled={isDeleting}
-          className="size-7 flex items-center justify-center rounded-md border border-destructive/40 text-destructive/60 hover:bg-destructive/10 hover:text-destructive transition-colors disabled:opacity-50"
+          className="size-7 flex items-center justify-center rounded-lg border border-destructive/30 text-destructive/50 hover:bg-destructive/10 hover:text-destructive transition-all disabled:opacity-50"
           title="Deletar"
         >
           {isDeleting ? <Loader2 className="size-3 animate-spin" /> : <Trash2 className="size-3" />}
         </button>
       </div>
-
     </div>
   )
 })
@@ -613,17 +634,17 @@ const ProjectRow = memo(function ProjectRow({
 
 function EmptyState({ hasFilters }: { hasFilters: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center rounded-2xl border border-dashed border-border bg-card/50">
+    <div className="flex flex-col items-center justify-center py-28 text-center rounded-2xl border border-dashed border-border/60 bg-card/40">
       <div
-        className="size-16 rounded-2xl flex items-center justify-center mb-5"
-        style={{ background: 'linear-gradient(135deg, hsl(258 55% 56% / 0.12), hsl(200 75% 55% / 0.08))' }}
+        className="size-20 rounded-2xl flex items-center justify-center mb-5 shadow-[0_8px_32px_rgba(0,0,0,0.06)]"
+        style={{ background: 'linear-gradient(135deg, hsl(258 55% 56% / 0.10), hsl(200 75% 55% / 0.06))' }}
       >
-        <Folder className="h-7 w-7 text-primary/60" />
+        <Folder className="h-9 w-9 text-primary/40" />
       </div>
       <h2 className="text-lg font-semibold mb-2 font-display">
         {hasFilters ? 'Nenhum projeto encontrado' : 'Nenhum projeto ainda'}
       </h2>
-      <p className="text-sm text-muted-foreground mb-6 max-w-sm leading-relaxed">
+      <p className="text-sm text-muted-foreground mb-7 max-w-sm leading-relaxed">
         {hasFilters
           ? 'Tente ajustar os filtros ou a busca para encontrar seus projetos.'
           : 'Crie seu primeiro projeto e comece a produzir conteúdo com IA em segundos.'}
@@ -631,8 +652,8 @@ function EmptyState({ hasFilters }: { hasFilters: boolean }) {
       {!hasFilters && (
         <Link href="/create">
           <button
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold shadow-[0_4px_20px_hsl(258_55%_56%/0.35)] hover:opacity-90 transition-opacity"
-            style={{ background: 'linear-gradient(135deg, hsl(258 55% 56%), hsl(258 55% 46%))' }}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-semibold hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+            style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', boxShadow: '0 4px 24px #8b5cf650' }}
           >
             <Plus className="h-4 w-4" />
             Criar Projeto

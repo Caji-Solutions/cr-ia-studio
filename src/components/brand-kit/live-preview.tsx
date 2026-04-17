@@ -62,6 +62,7 @@ export function LivePreview({
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-full overflow-hidden bg-muted flex items-center justify-center shrink-0 border border-border">
               {logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={logoUrl} alt="Logo" className="h-full w-full object-cover" />
               ) : (
                 <div 
